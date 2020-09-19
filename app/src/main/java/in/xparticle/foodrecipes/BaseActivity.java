@@ -23,7 +23,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mProgressBar = constraintLayout.findViewById(R.id.progress_bar);
         getLayoutInflater().inflate(layoutResID,frameLayout,true);
 
-        super.setContentView(layoutResID);
+        super.setContentView(constraintLayout);
     }
 
     public void showProgressBar(boolean visibility){
