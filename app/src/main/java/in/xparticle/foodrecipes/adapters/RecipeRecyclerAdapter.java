@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.xparticle.foodrecipes.R;
@@ -16,39 +18,42 @@ import in.xparticle.foodrecipes.models.Recipe;
 
 public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-   private List<Recipe> mRecipes;
-   private OnRecipeListener mOnRecipeListener;
+    private List<Recipe> mRecipes;
+    private OnRecipeListener mOnRecipeListener;
 
-    public RecipeRecyclerAdapter(List<Recipe> mRecipes, OnRecipeListener mOnRecipeListener) {
-        this.mRecipes = mRecipes;
-        this.mOnRecipeListener = mOnRecipeListener;
+    public RecipeRecyclerAdapter(OnRecipeListener onRecipeListener) {
+        mOnRecipeListener = onRecipeListener;
+        mRecipes = new ArrayList<>();
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_recipe_list,parent,false);
-        return new RecipeViewHolder(view,mOnRecipeListener);
+    public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_recipe_list_item, viewGroup, false);
+        return new RecipeViewHolder(view, mOnRecipeListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+        // set the image
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .error(R.drawable.ic_launcher_background);
 
-        Glide.with(holder.itemView.getContext())
-                .load(mRecipes.get(position))
-                .into(((RecipeViewHolder)holder).image);
+        Glide.with(((RecipeViewHolder) viewHolder).itemView)
+                .setDefaultRequestOptions(options)
+                .load(mRecipes.get(i).getImage_url())
+                .into(((RecipeViewHolder) viewHolder).image);
 
-        ((RecipeViewHolder)holder).title.setText(mRecipes.get(position).getTitle());
-        ((RecipeViewHolder)holder).publisher.setText(mRecipes.get(position).getPublisher());
-        ((RecipeViewHolder)holder).socialScore.setText(String.valueOf(Math.round(mRecipes.get(position).getSocial_rank())));
-
+        ((RecipeViewHolder) viewHolder).title.setText(mRecipes.get(i).getTitle());
+        ((RecipeViewHolder) viewHolder).publisher.setText(mRecipes.get(i).getPublisher());
+        ((RecipeViewHolder) viewHolder).socialScore.setText(String.valueOf(Math.round(mRecipes.get(i).getSocial_rank())));
     }
 
     @Override
     public int getItemCount() {
         return mRecipes.size();
     }
-
 
     public void setRecipes(List<Recipe> recipes){
         mRecipes = recipes;

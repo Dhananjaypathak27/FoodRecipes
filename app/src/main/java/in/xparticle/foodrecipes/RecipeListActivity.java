@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecipeListActivity extends BaseActivity {
+public class RecipeListActivity extends BaseActivity implements OnRecipeListener {
 
     private static final String TAG = "RecipeListActivity";
 
@@ -43,9 +43,8 @@ public class RecipeListActivity extends BaseActivity {
         setContentView(R.layout.activity_recipe_list);
         mRecyclerView = findViewById(R.id.recipe_list);
 
-
         mRecipeListViewModel = new ViewModelProvider(this).get(RecipeListViewModel.class);
-
+        initRecyclerView();
         subscribeObservers();
         testRetrofitRequest();
     }
@@ -57,8 +56,8 @@ public class RecipeListActivity extends BaseActivity {
             public void onChanged(@Nullable List<Recipe> recipes) {
                 if(recipes != null){
                     Testing.printRecipes("network test", recipes);
+                    mAdapter.setRecipes(recipes);
                 }
-                mAdapter.setRecipes(recipes);
             }
         });
     }
@@ -67,7 +66,19 @@ public class RecipeListActivity extends BaseActivity {
         mRecipeListViewModel.searchRecipesApi("chicken", 1);
     }
 
+    private void initRecyclerView(){
+        mAdapter = new RecipeRecyclerAdapter(this);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
+    @Override
+    public void onRecipeClick(int position) {
+        Log.d(TAG, "onRecipeClick: clicked. " + position);
+    }
 
+    @Override
+    public void onCategoryClick(int position) {
 
+    }
 }
