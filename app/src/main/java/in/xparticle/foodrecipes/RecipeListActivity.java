@@ -26,6 +26,7 @@ import in.xparticle.foodrecipes.requests.responses.RecipeResponse;
 import in.xparticle.foodrecipes.requests.responses.RecipeSearchResponse;
 import in.xparticle.foodrecipes.util.Constants;
 import in.xparticle.foodrecipes.util.Testing;
+import in.xparticle.foodrecipes.util.VerticalSpacingItemDecorator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,9 +72,12 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
     }
 
     private void initRecyclerView(){
+        VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(30);
+        mRecyclerView.addItemDecoration(itemDecorator);
         mAdapter = new RecipeRecyclerAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     private void initSearchView(){
