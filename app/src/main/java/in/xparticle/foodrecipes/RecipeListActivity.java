@@ -50,6 +50,11 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         initRecyclerView();
         subscribeObservers();
         initSearchView();
+
+        if(!mRecipeListViewModel.isViewingRecipes()){
+            //display the search category
+            displaySearchCategories();
+        }
     }
 
     private void subscribeObservers(){
@@ -88,25 +93,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
                 return false;
             }
         });
-//        final SearchView searchView= findViewById(R.id.search_view);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//
-//                // Search the database for a recipe
-//                mRecipeListViewModel.searchRecipesApi(query, 1);
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String query) {
-//
-//                // Wait for the user to submit the search. So do nothing here.
-//
-//                return false;
-//            }
-//        });
+
     }
 
     @Override
@@ -116,6 +103,13 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     @Override
     public void onCategoryClick(String category) {
-
+        mAdapter.displayLoading();
+        mRecipeListViewModel.searchRecipesApi(category, 1);
     }
+
+    private void displaySearchCategories(){
+        mRecipeListViewModel.setIsViewingRecipes(false);
+        mAdapter.displaySearchCategories();
+    }
+
 }
