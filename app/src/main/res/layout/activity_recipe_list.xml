@@ -8,11 +8,12 @@
     tools:context=".RecipeListActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbar"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Toolbar
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways">
@@ -25,7 +26,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:queryHint="Chicken ...">
             </androidx.appcompat.widget.SearchView>
-        </Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
 
     </com.google.android.material.appbar.AppBarLayout>
