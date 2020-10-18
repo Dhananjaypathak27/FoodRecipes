@@ -39,12 +39,14 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
     private RecipeListViewModel mRecipeListViewModel;
     private RecyclerView mRecyclerView;
     private RecipeRecyclerAdapter mAdapter;
+    private SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
         mRecyclerView = findViewById(R.id.recipe_list);
+        mSearchView = findViewById(R.id.search_view);
 
 //        mRecipeListViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
         mRecipeListViewModel = new ViewModelProvider(this).get(RecipeListViewModel.class);
@@ -66,6 +68,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
                 if(recipes != null){
                     if(mRecipeListViewModel.isViewingRecipes()){
                         Testing.printRecipes("network test", recipes);
+                        mRecipeListViewModel.setIsPerformingQuery(false);
                         mAdapter.setRecipes(recipes);
                     }
                 }
@@ -84,13 +87,14 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     private void initSearchView(){
 
-        SearchView searchView = findViewById(R.id.search_view);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//        SearchView searchView = findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
                 mAdapter.displayLoading();
                 mRecipeListViewModel.searchRecipesApi(query, 1);
+                mSearchView.clearFocus();
                 return false;
             }
 
@@ -111,6 +115,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
     public void onCategoryClick(String category) {
         mAdapter.displayLoading();
         mRecipeListViewModel.searchRecipesApi(category, 1);
+        mSearchView.clearFocus();
     }
 
     private void displaySearchCategories(){
