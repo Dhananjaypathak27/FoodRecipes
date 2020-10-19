@@ -1,6 +1,7 @@
 package in.xparticle.foodrecipes;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -12,6 +13,7 @@ import in.xparticle.foodrecipes.models.Recipe;
 
 public class RecipeActivity extends BaseActivity {
 
+    private static final String TAG = "RecipeActivity";
     //ui
     private ImageView mRecipeImage;
     private TextView mRecipeTitle, mRecipeRank;
@@ -35,6 +37,7 @@ public class RecipeActivity extends BaseActivity {
     private void getIncomingIntent(){
         if(getIntent().hasExtra("recipe")){
             Recipe recipe = getIntent().getParcelableExtra("recipe");
+            Log.d(TAG, "getIncomingIntent: "+recipe.getTitle());
         }
     }
 }
