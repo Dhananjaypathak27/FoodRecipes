@@ -7,7 +7,7 @@ public class AppExecutors {
 
     private static AppExecutors instance;
 
-    public static AppExecutors get(){
+    public static AppExecutors getInstance(){
         if(instance == null){
             instance = new AppExecutors();
         }
