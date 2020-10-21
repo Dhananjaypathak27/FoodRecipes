@@ -19,31 +19,30 @@ import com.bumptech.glide.request.RequestOptions;
 
 import in.xparticle.foodrecipes.ViewModels.RecipeViewModel;
 import in.xparticle.foodrecipes.models.Recipe;
-
 public class RecipeActivity extends BaseActivity {
 
     private static final String TAG = "RecipeActivity";
-    //ui
+
+    // UI components
     private ImageView mRecipeImage;
     private TextView mRecipeTitle, mRecipeRank;
     private LinearLayout mRecipeIngredientsContainer;
     private ScrollView mScrollView;
 
-    //var
-    RecipeViewModel mRecipeViewModel;
+    private RecipeViewModel mRecipeViewModel;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-
         mRecipeImage = findViewById(R.id.recipe_image);
         mRecipeTitle = findViewById(R.id.recipe_title);
         mRecipeRank = findViewById(R.id.recipe_social_score);
         mRecipeIngredientsContainer = findViewById(R.id.ingredients_container);
         mScrollView = findViewById(R.id.parent);
 
-        mRecipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        mRecipeViewModel =new ViewModelProvider(this).get(RecipeViewModel.class);
 
         showProgressBar(true);
         subscribeObservers();
@@ -53,7 +52,7 @@ public class RecipeActivity extends BaseActivity {
     private void getIncomingIntent(){
         if(getIntent().hasExtra("recipe")){
             Recipe recipe = getIntent().getParcelableExtra("recipe");
-            Log.d(TAG, "getIncomingIntent: "+recipe.getTitle());
+            Log.d(TAG, "getIncomingIntent: " + recipe.getTitle());
             mRecipeViewModel.searchRecipeById(recipe.getRecipe_id());
         }
     }
@@ -61,15 +60,54 @@ public class RecipeActivity extends BaseActivity {
     private void subscribeObservers(){
         mRecipeViewModel.getRecipe().observe(this, new Observer<Recipe>() {
             @Override
-            public void onChanged(Recipe recipe) {
+            public void onChanged(@Nullable Recipe recipe) {
                 if(recipe != null){
                     if(recipe.getRecipe_id().equals(mRecipeViewModel.getRecipeId())){
                         setRecipeProperties(recipe);
+                        mRecipeViewModel.setRetrievedRecipe(true);
                     }
-
                 }
             }
         });
+
+        mRecipeViewModel.isRecipeRequestTimedOut().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if(aBoolean && !mRecipeViewModel.didRetrieveRecipe()){
+                    Log.d(TAG, "onChanged: timed out..");
+                    displayErrorScreen("Error retrieving data. Check network connection.");
+                }
+            }
+        });
+    }
+
+    private void displayErrorScreen(String errorMessage){
+        mRecipeTitle.setText("Error retrieveing recipe...");
+        mRecipeRank.setText("");
+        TextView textView = new TextView(this);
+        if(!errorMessage.equals("")){
+            textView.setText(errorMessage);
+        }
+        else{
+            textView.setText("Error");
+        }
+        textView.setTextSize(15);
+        textView.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        mRecipeIngredientsContainer.addView(textView);
+
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.ic_launcher_background);
+
+        Glide.with(this)
+                .setDefaultRequestOptions(requestOptions)
+                .load(R.drawable.ic_launcher_background)
+                .into(mRecipeImage);
+
+        showParent();
+        showProgressBar(false);
+        mRecipeViewModel.setRetrievedRecipe(true);
     }
 
     private void setRecipeProperties(Recipe recipe){
@@ -77,8 +115,8 @@ public class RecipeActivity extends BaseActivity {
             RequestOptions requestOptions = new RequestOptions()
                     .placeholder(R.drawable.ic_launcher_background);
 
-            Glide.with(this).
-                    setDefaultRequestOptions(requestOptions)
+            Glide.with(this)
+                    .setDefaultRequestOptions(requestOptions)
                     .load(recipe.getImage_url())
                     .into(mRecipeImage);
 
@@ -96,6 +134,7 @@ public class RecipeActivity extends BaseActivity {
                 mRecipeIngredientsContainer.addView(textView);
             }
         }
+
         showParent();
         showProgressBar(false);
     }

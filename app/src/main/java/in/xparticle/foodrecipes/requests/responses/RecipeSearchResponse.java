@@ -7,6 +7,7 @@ import java.util.List;
 
 import in.xparticle.foodrecipes.models.Recipe;
 
+
 public class RecipeSearchResponse {
 
     @SerializedName("count")
@@ -33,3 +34,4 @@ public class RecipeSearchResponse {
                 '}';
     }
 }
+

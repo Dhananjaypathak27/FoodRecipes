@@ -11,9 +11,8 @@ public class RecipeResponse {
     @Expose()
     private Recipe recipe;
 
-
     public Recipe getRecipe(){
-        return  recipe;
+        return recipe;
     }
 
     @Override

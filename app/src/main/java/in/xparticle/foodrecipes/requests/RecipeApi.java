@@ -9,7 +9,7 @@ import retrofit2.http.Query;
 
 public interface RecipeApi {
 
-    //Search
+    // SEARCH
     @GET("api/search")
     Call<RecipeSearchResponse> searchRecipe(
             @Query("key") String key,
@@ -17,14 +17,10 @@ public interface RecipeApi {
             @Query("page") String page
     );
 
-    //Get recipe request
+    // GET RECIPE REQUEST
     @GET("api/get")
     Call<RecipeResponse> getRecipe(
-        @Query("key") String key,
-        @Query("rId") String recipe_id
+            @Query("key") String key,
+            @Query("rId") String recipe_id
     );
-
-
-
-
 }
