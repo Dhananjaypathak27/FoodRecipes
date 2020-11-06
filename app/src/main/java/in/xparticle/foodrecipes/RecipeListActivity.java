@@ -75,7 +75,8 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
-                    Log.d(TAG, "onChanged: the query is exhausted ..");
+//                    Log.d(TAG, "onChanged: the query is exhausted ..");
+                    mAdapter.setQueryExhausted();
                 }
             }
         });
